@@ -72,13 +72,40 @@ Attrition_Flag: Internal event (customer activity) variable - if the account is 
 # Exploring the Data
 
 After we're exploring and visualize the data, we can conclude : 
+![image](https://user-images.githubusercontent.com/64974149/135665264-125db463-377b-43bb-a518-cb69a43543bc.png)
+![image](https://user-images.githubusercontent.com/64974149/135665292-9c1880ba-cd18-4e71-a665-0e544de9b406.png)
+![image](https://user-images.githubusercontent.com/64974149/135666229-d6052c32-e6e4-42d2-bac1-6c62c309dbf0.png)
+![image](https://user-images.githubusercontent.com/64974149/135666282-89a1d0c4-3991-4e6f-8202-778de73c1669.png)
+![image](https://user-images.githubusercontent.com/64974149/135666311-06aff3e3-137c-486e-bd96-047d3a006c35.png)
+![image](https://user-images.githubusercontent.com/64974149/135666348-cc21e8b5-bcdc-4413-9f9e-f541bdd073b3.png)
 
 - The customer gender is almost even, 30% college graduates with half being either Highschool graduates, unkown, or uneducated. The remaining 40% are either current college students,or grad students.
 - Almost half are married, 38% single, and the remaining 12 are divorced or unkown. 35% of customers make less than $40k per year which is near the poverty threshold. The rest are more evenly spaced out. 93% of customers choose the cheapest card option (likely the lowest interest rate) with a tiny portion choosing the more expensive cards
+
+![image](https://user-images.githubusercontent.com/64974149/135666515-28866c14-f449-49c4-bab1-4a5165e23c44.png)
+
 - Churned customers are likely to hold less credit cards than existing customers which is shown by a lower median . Is there a deal you provide that favors customers with multiple credit cards? (Like customers with spouses, families, or buisnesses that need additional cards)
+
+![image](https://user-images.githubusercontent.com/64974149/135666547-6c699378-117d-4db0-a572-1640b03df858.png)
+
 - Churned customers tend to have slightly more inactive months, but the distribution is more concentrated from the 1-4 months inactive (though this may be from the small sample size)
+
+![image](https://user-images.githubusercontent.com/64974149/135666643-6ff7f4dc-76f4-44e8-9845-d4e45824d805.png)
+- Churned customers have a lower credit limit, so perhaps increase the credit limit for these
+
+![image](https://user-images.githubusercontent.com/64974149/135666800-e71502f8-338a-4028-88a2-3a5eb5a2c7af.png)
+
 - Churned customers have a much smaller revolving balance which, because they don't fully pay off their credit card balance, may signify that they have less disposable income than staying customers that know they can pay off their revolving balance
-- Churned customers will have a lower amount of transactions, which makes sense as they're less involved with this company and will have a smaller transaction change over time as displayed
+
+![image](https://user-images.githubusercontent.com/64974149/135666842-f5a0a299-f6da-4306-858e-6225b59983b2.png)
+
+- Churned customers will have a lower amount of transactions, which makes sense as they're less involved with this company and will have a smaller transaction change over time as displayed bellow
+
+![image](https://user-images.githubusercontent.com/64974149/135666910-b8d39913-849b-4dd1-960a-1e9d7e7759e6.png)
+
+
+---
+
 
 ![image](https://user-images.githubusercontent.com/64974149/135511682-9abab7e1-c73a-4e5f-81a1-67b9d238582b.png)
 
@@ -124,20 +151,22 @@ When categorical features in the dataset contain variables with intrinsic natura
 
 ## ML Model Shortlisting
 Testing out a couple Machine Learning models before we use the Deep Neural Net. Result **accuracy score ** for each model is :
-- Random Forest : 0.9674074074074074
-- KNeighbors : 0.8716049382716049
-- SVC : 0.8464197530864197
-- xgboost : 0.9708641975308642
+- Random Forest : 0.9634567901234568
+- KNeighbors : 0.8637037037037038
+- SVC : 0.8330864197530864
+- xgboost : 0.9718518518518519
 
 ## Neural Network
 Since this is a standard binary classification problem, we'll use a shallow feedforward neural network with 19 input neurons and 2 output neurons
+![image](https://user-images.githubusercontent.com/64974149/135667897-72e0e24d-55a2-4798-bcc1-a7db04be5772.png)
+
 
 ## Model Assemble
 Ensembling our ML models together to get the highest possible accuracy. It's interesting how the Random Forest and XGBoost Classifiers got a 10% higher accuracy than the shallow neural network, for we did not need to tweak any of its hyperparameters. Perhaps Ockham's Razor is clearly shown here?
 
-accuracy score is : 0.9693827160493828
+accuracy score is : 0.9679012345679012
 
 # Conclusion
 
-- The highest accuracy achieved was 97% which went way above our manager's expectations. However, we have raised the bar, and in further problems, he will be expecting more
+- The highest accuracy achieved was 97.18% which went way above our manager's expectations. However, we have raised the bar, and in further problems, he will be expecting more
 - Total Transaction change,revolving balance,and Number of contacts within the past year are most correlated with a churning customer
