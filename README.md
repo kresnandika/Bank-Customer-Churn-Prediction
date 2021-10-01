@@ -6,6 +6,7 @@ A manager at a local bank is disturbed with more and more customers leaving thei
 As you analyze the data, before you create the model, the sales team also needs you to determine the most influential factors that can lead to a customer's decision of leaving the business. The head of the sales department is expecting a report that helps them visualize where the differences lie between churning and non-churning customers.
 
 # Business Understanding
+
 To define the success of the solution that we will deliver let's define the metrics as: F1 Score, Precision and Recall. This metrics were chosen since normally churn problems are imbalanced, but all depends on the definition of churn and the cost driven by each scenario.
 
 ## Objective
@@ -21,6 +22,7 @@ To define the success of the solution that we will deliver let's define the metr
 since only 16% of the customers are churned, a data upsampling method is needed to match them with the regular customer size to give our model a better chance of catching small details that would be missed had we not upsampled it
 
 # Data Understanding
+
 The Backend Engineer at the bank gives us the data through their MySQL database in an easy to use CSV with all missing features replaced by an "unkown" string. However, he tried to train a Naive Bayes classifier and accidently left in 2 prediction columns in the data. No Worries. We'll also remove the Clientnumber as this isn't important
 
 ## Feature Description
@@ -68,7 +70,8 @@ The Backend Engineer at the bank gives us the data through their MySQL database 
 Attrition_Flag: Internal event (customer activity) variable - if the account is closed then 1(Attrited Customer) else 0(Existing Customer)
 
 # Exploring the Data
-After i'm exploring and visualize the data, we can conclude : 
+
+After we're exploring and visualize the data, we can conclude : 
 
 - The customer gender is almost even, 30% college graduates with half being either Highschool graduates, unkown, or uneducated. The remaining 40% are either current college students,or grad students.
 - Almost half are married, 38% single, and the remaining 12 are divorced or unkown. 35% of customers make less than $40k per year which is near the poverty threshold. The rest are more evenly spaced out. 93% of customers choose the cheapest card option (likely the lowest interest rate) with a tiny portion choosing the more expensive cards
@@ -89,5 +92,52 @@ The following are moderately correlated (30-75%)
   - Total Transaction count and Total Relationship count are negative
   - Credit Limit and Average Utilization Ratio are negative Total Revolving balance and Average Utilization Ratio are positive Average Open To Buy and Average Utilization Ration are negative
 
+# Data Preprocessing
+
+## Converting Categorical Features
+If you are familiar with machine learning, you will probably have encountered categorical features in many datasets. These generally include different categories or levels associated with the observation, which are non-numerical and thus need to be converted so the computer can process them.
+
+Categorical features can only take on a limited, and usually fixed, number of possible values. For example, if a dataset is about information related to users, then you will typically find features like country, gender, age group, etc. Alternatively, if the data you're working with is related to products, you will find features like product type, manufacturer, seller and so on. in this dataset, the information related to :
+- Attrition_Flag
+- Gender	
+- Education_Level	
+- Marital_Status	
+- Income_Category	
+- Card_Category
 
 
+## Scaling Continous Features
+Feature Scaling or Standardization: It is a step of Data Pre Processing that is applied to independent variables or features of data. It basically helps to normalize the data within a particular range. Sometimes, it also helps in speeding up the calculations in an algorithm.
+
+**Why and Where to Apply Feature Scaling?**
+The real-world dataset contains features that highly vary in magnitudes, units, and range. Normalization should be performed when the scale of a feature is irrelevant or misleading and not should Normalise when the scale is meaningful.
+
+### StandarScaler
+StandardScaler is an important technique that is mainly performed as a preprocessing step before many machine learning models, in order to standardize the range of functionality of the input dataset.
+
+Some machine learning practitioners tend to standardize their data blindly before each machine learning model without making the effort to understand why it should be used, or even whether it is needed or not. So you need to understand when you should use the StandardScaler to scale your data.
+
+### Ordinal Encoding
+When categorical features in the dataset contain variables with intrinsic natural order such as Low, Medium and High, these must be encoded differently than nominal variables (where there is no intrinsic order for e.g. Male or Female). This can be achieved in PyCaret using ordinal_features parameter within setup which accepts a dictionary with feature name and levels in the increasing order from lowest to highest.
+
+# Modeling
+
+## ML Model Shortlisting
+Testing out a couple Machine Learning models before we use the Deep Neural Net. Result **accuracy score ** for each model is :
+- Random Forest : 0.9674074074074074
+- KNeighbors : 0.8716049382716049
+- SVC : 0.8464197530864197
+- xgboost : 0.9708641975308642
+
+## Neural Network
+Since this is a standard binary classification problem, we'll use a shallow feedforward neural network with 19 input neurons and 2 output neurons
+
+## Model Assemble
+Ensembling our ML models together to get the highest possible accuracy. It's interesting how the Random Forest and XGBoost Classifiers got a 10% higher accuracy than the shallow neural network, for we did not need to tweak any of its hyperparameters. Perhaps Ockham's Razor is clearly shown here?
+
+accuracy score is : 0.9693827160493828
+
+# Conclusion
+
+- The highest accuracy achieved was 97% which went way above our manager's expectations. However, we have raised the bar, and in further problems, he will be expecting more
+- Total Transaction change,revolving balance,and Number of contacts within the past year are most correlated with a churning customer
