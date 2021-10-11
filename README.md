@@ -16,14 +16,27 @@ To define the success of the solution that we will deliver let's define the metr
 2. A clean and easy to understand visual report that helps the sales team better visualize what makes a client churn or not churn
 3. Precision and Recall Curves as well as the Confusion Matrix will also be used
 
+## Goals
+- consists of an exploratory analysis, where the objective is to know the behavior of the variables and to analyze attributes that indicate a strong relationship with the cancellation of credit card service customers.
+- Performance of the model will be measured with accuracy and the rate of False Positives. The manager is looking for at least a 85% F1 Score accuracy
+- identify customers who are getting churned. Even if we predict non-churning customers as churned, it won't harm our business. But predicting churning customers as Non-churning will do
+
+## Problem Statement/Issues
 **Performance of the model will be mesured with accuracy and the rate of False Positives. The manager is looking for at least a 90% F1 Score accuracy**
 
-## Issues
-since only 16% of the customers are churned, a data upsampling method is needed to match them with the regular customer size to give our model a better chance of catching small details that would be missed had we not upsampled it
+## Solution Statements
+After we solve the issues, we will use some modeling in machine learning before we use deep neural net
+
+- RandomForestClassifier : A random forest is a meta estimator that fits a number of decision tree classifiers on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.
+- KNeighborsClassifier : is a type of classification where the function is only approximated locally and all computation is deferred until function evaluation. Since this algorithm relies on distance for classification, if the features represent different physical units or come in vastly different scales then normalizing the training data can improve its accuracy dramatically
+- SVC : are supervised learning models with associated learning algorithms that analyze data for classification and regression analysis.
+- xgb : is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable. It implements machine learning algorithms under the Gradient Boosting framework.
 
 # Data Understanding
 
 The Backend Engineer at the bank gives us the data through their MySQL database in an easy to use CSV with all missing features replaced by an "unkown" string. However, he tried to train a Naive Bayes classifier and accidently left in 2 prediction columns in the data. No Worries. We'll also remove the Clientnumber as this isn't important
+
+Source Dataset : [Credit Card customers](https://www.kaggle.com/sakshigoyal7/credit-card-customers/code)
 
 ## Feature Description
 - CLIENTNUM: Client number. Unique identifier for the customer holding the account
@@ -147,26 +160,63 @@ Some machine learning practitioners tend to standardize their data blindly befor
 ### Ordinal Encoding
 When categorical features in the dataset contain variables with intrinsic natural order such as Low, Medium and High, these must be encoded differently than nominal variables (where there is no intrinsic order for e.g. Male or Female). This can be achieved in PyCaret using ordinal_features parameter within setup which accepts a dictionary with feature name and levels in the increasing order from lowest to highest.
 
+### SMOTE
+To correct the problem of unbalancing the classes of the data set, I will use the SMOTE method.
+
+One approach to addressing imbalanced datasets is to oversample the minority class. The simplest approach involves duplicating examples in the minority class, although these examples don’t add any new information to the model. Instead, new examples can be synthesized from the existing examples. This is a type of data augmentation for the minority class and is referred to as the Synthetic Minority Oversampling Technique, or SMOTE for short.
+
+SMOTE works by selecting examples that are close in the feature space, drawing a line between the examples in the feature space and drawing a new sample at a point along that line.
+
+>SMOTE first selects a minority class instance a at random and finds its k nearest minority class neighbors. The synthetic instance is then created by choosing one of the k nearest neighbors b at random and connecting a and b to form a line segment in the feature space. The synthetic instances are generated as a convex combination of the two chosen instances a and b.
+
+>The combination of SMOTE and under-sampling performs better than plain under-sampling.
+SMOTE: Synthetic Minority Over-sampling Technique](https://arxiv.org/abs/1106.1813), 2011
+
+![image](https://user-images.githubusercontent.com/64974149/136722513-ae778109-18e9-4d7a-bd83-db07c477ee24.png)
+
+
 # Modeling
 
 ## ML Model Shortlisting
 Testing out a couple Machine Learning models before we use the Deep Neural Net. Result **accuracy score ** for each model is :
-- Random Forest : 0.9634567901234568
-- KNeighbors : 0.8637037037037038
-- SVC : 0.8330864197530864
-- xgboost : 0.9718518518518519
+- Random Forest : 9551166965888689
+- KNeighbors : 8093955715140634
+- SVC : 7929383602633154
+- xgboost : 0.961998803111909
 
 ## Neural Network
+
 Since this is a standard binary classification problem, we'll use a shallow feedforward neural network with 19 input neurons and 2 output neurons
+
+A neural network is built using various hidden layers. Now that we know the computations that occur in a particular layer, let us understand how the whole neural network computes the output for a given input X. These can also be called the forward-propagation equations.
+
+![image](https://user-images.githubusercontent.com/64974149/136722694-c713d6a6-3d3d-4170-92f1-80bb46847496.png)
+1. The first equation calculates the intermediate output Z[1] of the first hidden layer.
+2. The second equation calculates the final output A[1] of the first hidden layer.
+3. The third equation calculates the intermediate output Z[2] of the output layer.
+4. The fourth equation calculates the final output A[2] of the output layer which is also the final output of the whole neural network.
+
 ![image](https://user-images.githubusercontent.com/64974149/135667897-72e0e24d-55a2-4798-bcc1-a7db04be5772.png)
 
 
 ## Model Assemble
 Ensembling our ML models together to get the highest possible accuracy. It's interesting how the Random Forest and XGBoost Classifiers got a 10% higher accuracy than the shallow neural network, for we did not need to tweak any of its hyperparameters. Perhaps Ockham's Razor is clearly shown here?
 
-accuracy score is : 0.9679012345679012
+**Occam’s razor suggests that in machine learning, we should prefer simpler models with fewer coefficients over complex models like ensembles.
 
+Accuracy : 0.959904248952723
+Precision : 0.9645587213342599
+Recall : 0.9886039886039886
+
+# Metrics Evaluation
+
+- Confusion Matrix is a tool to determine the performance of classifier. It contains information about actual and predicted classifications. The below table shows confusion matrix of two-class, churned customers and non-churned customers classifier.
+- True Positive (TP) is the number of correct predictions that an example is positive which means positive class correctly identified as positive. Example: Given class is churned and the classifier has been correctly predicted it as churned.
+- False Negative (FN) is the number of incorrect predictions that an example is negative which means positive class incorrectly identified as negative. Example: Given class is churned however, the classifier has been incorrectly predicted it as non-churned.
+- False positive (FP) is the number of incorrect predictions that an example is positive which means negative class incorrectly identified as positive. Example: Given class is non-churned however, the classifier has been incorrectly predicted it as churned.
+- True Negative (TN) is the number of correct predictions that an example is negative which means negative class correctly identified as negative. Example: Given class is not churned and the classifier has been correctly predicted it as not negative.
+- 
 # Conclusion
 
-- The highest accuracy achieved was 97.18% which went way above our manager's expectations. However, we have raised the bar, and in further problems, he will be expecting more
+- The highest accuracy achieved was 96% and the highest f1-score is 90% which went way above our manager's expectations. However, we have raised the bar, and in further problems, he will be expecting more
 - Total Transaction change,revolving balance,and Number of contacts within the past year are most correlated with a churning customer
